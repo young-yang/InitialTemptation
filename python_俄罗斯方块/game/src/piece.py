@@ -42,12 +42,12 @@ class Piece():
             self.is_on_bottom = True
     
     def can_move_right(self):
-        shape_mtx = PIECES[self.shape]
-        shape_turn = shape_mtx[self.turn_times]
-        for r in range(len(shape_turn )):
-            for c in range(len(shape_turn [r])):
-                if (shape_turn[r][c] == 'O') and (self.x+c >=COLUMN_NUM -1) :
-                    return False
+        shape_mtx = PIECES[self.shape][self.turn_times]
+        for r in range(len(shape_mtx)):
+            for c in range(len(shape_mtx [0])):
+                if shape_mtx[r][c] == 'O':
+                    if self.x+c >=COLUMN_NUM -1 or self.game_wall.is_wall(self.y + r,self.x + c + 1) :
+                        return False
         return True
      
     def can_move_down(self):
@@ -61,12 +61,12 @@ class Piece():
         return True 
     
     def can_move_left(self):
-        shape_mtx = PIECES[self.shape]
-        shape_turn = shape_mtx[self.turn_times]
-        for r in range(len(shape_turn)):
-            for c in range(len(shape_turn[r])):
-                if (shape_turn[r][c] == 'O') and (self.x+c <=0) :
-                    return False
+        shape_mtx = PIECES[self.shape][self.turn_times]
+        for r in range(len(shape_mtx)):
+            for c in range(len(shape_mtx[0])):
+                if shape_mtx[r][c] == 'O' :
+                    if (self.x+c <=0) or self.game_wall.is_wall(self.y + r,self.x + c - 1):
+                        return False
         return True     
 
     def turn(self):
@@ -82,7 +82,7 @@ class Piece():
             for c in range(len(shape_mtx[0])):
                 if shape_mtx[r][c] == 'O':
                     if(self.x + c < 0 or self.x +c >= COLUMN_NUM or
-                       self.y + r < 0 or self.y + r >= LINE_NUM):
+                       self.y + r < 0 or self.game_wall.is_wall(self.y + r, self.x + c)):
                         return False
         return True
     
@@ -93,3 +93,12 @@ class Piece():
     def set_cell(self,position,shape_label):
         c,r = position
         self.area[r][c] = shape_label
+        
+    def hit_wall(self):
+        shape_mtx = PIECES[self.shape][self.turn_times]
+        for r in range(len(shape_mtx)):
+            for c in range(len(shape_mtx[0])):
+                if shape_mtx[r][c] == 'O':
+                    if self.game_wall.is_wall(self.y + r, self.x + c):
+                        return True
+        return False

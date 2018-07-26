@@ -30,16 +30,12 @@ def main():
     while True:
         #判断方块是否落在最底部
         if game_state.piece and game_state.piece.is_on_bottom:
-            game_state.wall.add_to_wall(game_state.piece)
-            game_state.add_score(game_state.wall.eliminate_lines())
-            game_state.piece = Piece(random.choice(PIECE_TYPES),screen,game_state.wall)
-
+            game_state.touchBottom()
         check_events(game_state)
         #设置屏幕背景颜色
         screen.fill(bg_color)
         #绘制游戏区域，网格线和墙体
         GameDisplay.draw_game_area(screen, game_state,game_resource)
-        
         if game_state.piece:
             game_state.piece.paint()
         #刷新屏幕
@@ -83,7 +79,7 @@ def onKeyDown(event,game_state):
             game_state.resumeGame()
         else :
             game_state.pauseGame()
-            
+
 if __name__ == "__main__":
     main()
     
