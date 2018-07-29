@@ -4,6 +4,7 @@ from settings import *
 from piece import Piece
 from gameWall import GameWall
 import pygame
+import pdb
 
 class GameState():
     def __init__(self,screen):
@@ -18,7 +19,6 @@ class GameState():
         #游戏是否暂停
         self.paused = False
         #游戏是否结束
-        self.ended = False
         self.session_count = 0
         
     def set_timer(self,time_interval):
@@ -34,8 +34,8 @@ class GameState():
         self.stopped = False
         self.set_timer(TIMER_INTERVAL)
         self.timer_interval = TIMER_INTERVAL
-        self.piece = Piece(random.choice(PIECE_TYPES),self.screen,self.wall)
-        self.nextPiece = Piece(random.choice(PIECE_TYPES),self.screen,self.wall)
+        self.piece = self.newPiece()
+        self.piece = self.newPiece()
         self.session_count += 1
         self.wall.clear()
         self.game_score = 0
@@ -56,10 +56,14 @@ class GameState():
             if self.wall.is_wall(0,c):
                 self.stopped = True
                 break
-            if not self.stopped:
-                self.piece = self.nextPiece
-                self.nextPiece = Piece(random.choice(PIECE_TYPES),self.screen,self.wall)
-                if self.piece.hit_wall():
-                    self.stopped = True
-            if self.stopped:
-                self.stop_timer()
+        if not self.stopped:
+            self.piece = self.newPiece()
+            if self.piece.hit_wall():
+                self.stopped = True
+        if self.stopped:
+            self.stop_timer()
+    
+    def newPiece(self):
+        self.piece = self.nextPiece;
+        self.nextPiece = Piece(random.choice(PIECE_TYPES),self.screen,self.wall)
+        return self.piece

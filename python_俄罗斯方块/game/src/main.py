@@ -3,6 +3,7 @@ import sys
 import pygame
 import time
 import random
+import pdb
 
 from piece import Piece
 from settings import *
@@ -26,6 +27,7 @@ def main():
     random.seed(int(time.time()))
     game_state = GameState(screen)
     game_resource = GameResource()
+    i = 1
     #游戏主循环
     while True:
         #判断方块是否落在最底部
