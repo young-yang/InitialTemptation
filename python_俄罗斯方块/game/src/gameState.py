@@ -20,6 +20,8 @@ class GameState():
         self.paused = False
         #游戏是否结束
         self.session_count = 0
+        #是否显示结束图片
+        self.ended = False
         
     def set_timer(self,time_interval):
         self.game_timer = pygame.time.set_timer(pygame.USEREVENT, time_interval)
@@ -40,6 +42,7 @@ class GameState():
         self.wall.clear()
         self.game_score = 0
         self.paused = False
+        self.ended = False
     
     def pauseGame(self):
         pygame.time.set_timer(pygame.USEREVENT, 0)   #传入0表示清除定时器
@@ -55,11 +58,13 @@ class GameState():
         for c in range(COLUMN_NUM):
             if self.wall.is_wall(0,c):
                 self.stopped = True
+                self.ended = True
                 break
         if not self.stopped:
             self.piece = self.newPiece()
             if self.piece.hit_wall():
                 self.stopped = True
+                self.ended = True
         if self.stopped:
             self.stop_timer()
     

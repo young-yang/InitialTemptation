@@ -27,7 +27,8 @@ class GameDisplay():
         if game_state.stopped:
             if game_state.session_count > 0:
                 GameDisplay.draw_end_prompt(screen,game_resource)
-            GameDisplay.draw_start_prompt(screen, game_resource)
+            if not game_state.ended:
+                GameDisplay.draw_start_prompt(screen, game_resource)
         if game_state.paused:
             GameDisplay.draw_pause_prompt(screen,game_resource)
             
@@ -70,10 +71,18 @@ class GameDisplay():
                 for c in range(len(shape_turn[0])):
                     if shape_turn[r][c] == 'O':
                         cells.append((c,r,PIECE_COLORS[next_piece.shape]))
-
+            
+            max_c = max([cell[0] for cell in cells])
+            min_c = max([cell[0] for cell in cells])
+            start_x += round( (5 - (max_c - min_c + 1)) / 2 * CELL_WIDTH)
+            max_r = max([cell[1] for cell in cells])
+            min_r = min([cell[1] for cell in cells])
+            start_y += round( (4 - (max_r - min_r + 1)) / 2 * CELL_WIDTH) 
+            
             for cell in cells:
                 color = cell[2]
-                left_top = (start_x + (cell[0]) * CELL_WIDTH,start_y + (cell[1]) * CELL_WIDTH)
+                left_top = (start_x + (cell[0] - min_c) * CELL_WIDTH,
+                            start_y + (cell[1] - min_r) * CELL_WIDTH)
                 GameDisplay.draw_cell_rect(screen, left_top, color)
             
     @staticmethod
